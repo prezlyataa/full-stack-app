@@ -2,7 +2,6 @@ const mongoose = require("mongoose");
 const express = require("express");
 const cors = require("cors");
 const passport = require("passport");
-const passportLocal = require("passport-local").Strategy;
 const cookieParser = require("cookie-parser");
 const bcrypt = require("bcryptjs");
 const session = require("express-session");
@@ -10,16 +9,23 @@ const bodyParser = require("body-parser");
 const app = express();
 const User = require("./user");
 
-mongoose.connect(
-    "mongodb+srv://prezlyata:Mongo123*@cluster0-q9g9s.mongodb.net/test?retryWrites=true&w=majority",
-    {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-    },
-    () => {
-      console.log("Mongoose Is Connected");
-    }
-);
+const DB_URL = "mongodb+srv://prezlyata:Mongo123*@cluster0.dbi6l.mongodb.net/test?retryWrites=true&w=majority";
+
+mongoose
+    .connect(DB_URL, {
+        useCreateIndex: true,
+        useNewUrlParser: true,
+        useUnifiedTopology: true,
+        useFindAndModify: false
+    })
+    .then(x => {
+        console.log(
+            `Connected to Mongo! Database name: "${x.connections[0].name}"`
+        );
+    })
+    .catch(err => {
+        console.error("Error connecting to mongo", err);
+});
   
 // Middleware
 app.use(bodyParser.json());
