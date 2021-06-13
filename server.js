@@ -10,6 +10,7 @@ const path = require("path");
 const app = express();
 const User = require("./user");
 
+const PORT = process.env.PORT || 4000;
 const DB_NAME = "full-stack-app";
 const DB_URL = `mongodb+srv://prezlyata:Mongo123*@cluster0.dbi6l.mongodb.net/${DB_NAME}?retryWrites=true&w=majority`;
 
@@ -96,6 +97,6 @@ app.get("/user", (req, res) => {
     res.send(req.user); // The req.user stores the entire user that has been authenticated inside of it.
 });
 
-app.listen(4000, () => {
+app.listen(PORT, () => {
     console.log("Server Has Started");
 });
