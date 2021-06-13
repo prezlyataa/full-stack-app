@@ -6,10 +6,12 @@ const cookieParser = require("cookie-parser");
 const bcrypt = require("bcryptjs");
 const session = require("express-session");
 const bodyParser = require("body-parser");
+const path = require("path");
 const app = express();
 const User = require("./user");
 
-const DB_URL = "mongodb+srv://prezlyata:Mongo123*@cluster0.dbi6l.mongodb.net/test?retryWrites=true&w=majority";
+const DB_NAME = "full-stack-app";
+const DB_URL = `mongodb+srv://prezlyata:Mongo123*@cluster0.dbi6l.mongodb.net/${DB_NAME}?retryWrites=true&w=majority`;
 
 mongoose
     .connect(DB_URL, {
@@ -28,6 +30,7 @@ mongoose
 });
   
 // Middleware
+app.use(express.static(path.join(__dirname, 'client/build')))
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(
@@ -47,6 +50,16 @@ app.use(cookieParser("secretcode"));
 app.use(passport.initialize());
 app.use(passport.session());
 require("./passportConfig")(passport);
+
+app.all('*', (req, res, next) => {
+    res
+        .header('Access-Control-Allow-Origin', '*')
+        .header('Access-Control-Allow-Methods', 'PUT, GET, POST, DELETE, OPTIONS')
+        .header('Access-Control-Allow-Headers', 'Content-Type');
+    next();
+});
+
+app.get('/', (req, res) => res.sendFile(path.join(__dirname + '/client/build/index.html'))); 
 
 app.post("/login", (req, res, next) => {
     passport.authenticate("local", (err, user, info) => {
