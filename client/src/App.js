@@ -16,7 +16,7 @@ function App() {
         password: registerPassword,
       },
       withCredentials: true,
-      url: "/register",
+      url: "http://localhost:4000/register",
     }).then((res) => console.log(res));
   };
   const login = () => {
@@ -27,19 +27,28 @@ function App() {
         password: loginPassword,
       },
       withCredentials: true,
-      url: "/login",
+      url: "http://localhost:4000/login",
     }).then((res) => console.log(res));
   };
   const getUser = () => {
     Axios({
       method: "GET",
       withCredentials: true,
-      url: "/user",
+      url: "http://localhost:4000/user",
     }).then((res) => {
       setData(res.data);
       console.log(res.data);
     });
   };
+  const logout = () => {
+    Axios({
+      method: "GET",
+      withCredentials: true,
+      url: "http://localhost:4000/logout",
+    }).then((res) => {
+      console.log(res.data);
+    });
+  }
   return (
     <div className="App">
       <div>
@@ -72,6 +81,10 @@ function App() {
         <h1>Get User</h1>
         <button onClick={getUser}>Submit</button>
         {data ? <h1>Welcome Back {data.username}</h1> : null}
+      </div>
+      <div>
+        <h2>Logout</h2>
+        <button onClick={logout}>Logout</button>
       </div>
     </div>
   );

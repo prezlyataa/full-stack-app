@@ -52,13 +52,13 @@ app.use(passport.initialize());
 app.use(passport.session());
 require("./passportConfig")(passport);
 
-app.all('*', (req, res, next) => {
-    res
-        .header('Access-Control-Allow-Origin', '*')
-        .header('Access-Control-Allow-Methods', 'PUT, GET, POST, DELETE, OPTIONS')
-        .header('Access-Control-Allow-Headers', 'Content-Type');
-    next();
-});
+// app.all('*', (req, res, next) => {s
+//     res
+//         .header('Access-Control-Allow-Origin', '*')
+//         .header('Access-Control-Allow-Methods', 'PUT, GET, POST, DELETE, OPTIONS')
+//         .header('Access-Control-Allow-Headers', 'Content-Type');
+//     next();
+// });
 
 app.get('/', (req, res) => res.sendFile(path.join(__dirname + '/client/build/index.html'))); 
 
@@ -74,6 +74,15 @@ app.post("/login", (req, res, next) => {
             });
         }
     })(req, res, next);
+});
+
+app.get('/logout', (req, res) => {
+    req.session.destroy((err) => {
+        if (err) { return next(err); }
+        // The response should indicate that the user is no longer authenticated.
+        return res.send({ authenticated: req.isAuthenticated() });
+      });
+    req.logout()
 });
 
 app.post("/register", (req, res) => {
