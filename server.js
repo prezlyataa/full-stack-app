@@ -34,12 +34,10 @@ mongoose
 app.use(express.static(path.join(__dirname, 'client/build')))
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-app.use(
-cors({
-        origin: "http://localhost:3000", // <-- location of the react app were connecting to
-        credentials: true,
-    })
-);
+app.use(cors({
+    origin: "http://localhost:3000", // <-- location of the react app were connecting to
+    credentials: true,
+}));
 app.use(
     session({
         secret: "secretcode",
@@ -52,13 +50,13 @@ app.use(passport.initialize());
 app.use(passport.session());
 require("./passportConfig")(passport);
 
-// app.all('*', (req, res, next) => {s
-//     res
-//         .header('Access-Control-Allow-Origin', '*')
-//         .header('Access-Control-Allow-Methods', 'PUT, GET, POST, DELETE, OPTIONS')
-//         .header('Access-Control-Allow-Headers', 'Content-Type');
-//     next();
-// });
+app.all('*', (req, res, next) => {
+    res
+        .header('Access-Control-Allow-Origin', '*')
+        .header('Access-Control-Allow-Methods', 'PUT, GET, POST, DELETE, OPTIONS')
+        .header('Access-Control-Allow-Headers', 'Content-Type');
+    next();
+});
 
 app.get('/', (req, res) => res.sendFile(path.join(__dirname + '/client/build/index.html'))); 
 
@@ -106,6 +104,28 @@ app.get("/user", (req, res) => {
     res.send(req.user); // The req.user stores the entire user that has been authenticated inside of it.
 });
 
+const isLoggedIn = (req, res, next) => {
+    if (req.user) {
+        next();
+    } else {
+        res.sendStatus(401);
+    }
+}
+app.get('/failed', (req, res) => res.send('You Failed to log in!'))
+
+// In this route you can see that if the user is logged in u can acess his info in: req.user
+app.get('/good', isLoggedIn, (req, res) => res.send(`Welcome mr ${req.user.displayName}!`))
+
+// Auth Routes
+app.get('/google', passport.authenticate('google', { scope: ['profile', 'email'] }));
+
+app.get('/google/callback', passport.authenticate('google', { failureRedirect: '/failed' }),
+  function(req, res) {
+    // Successful authentication, redirect home.
+    res.redirect('/');
+  }
+);
+
 app.listen(PORT, () => {
-    console.log("Server Has Started");
+    console.log("Server has started");
 });

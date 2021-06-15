@@ -16,7 +16,7 @@ function App() {
         password: registerPassword,
       },
       withCredentials: true,
-      url: "http://localhost:4000/register",
+      url: "/register",
     }).then((res) => console.log(res));
   };
   const login = () => {
@@ -27,14 +27,14 @@ function App() {
         password: loginPassword,
       },
       withCredentials: true,
-      url: "http://localhost:4000/login",
+      url: "/login",
     }).then((res) => console.log(res));
   };
   const getUser = () => {
     Axios({
       method: "GET",
       withCredentials: true,
-      url: "http://localhost:4000/user",
+      url: "/user",
     }).then((res) => {
       setData(res.data);
       console.log(res.data);
@@ -44,7 +44,7 @@ function App() {
     Axios({
       method: "GET",
       withCredentials: true,
-      url: "http://localhost:4000/logout",
+      url: "/logout",
     }).then((res) => {
       console.log(res.data);
     });
@@ -86,6 +86,7 @@ function App() {
         <h2>Logout</h2>
         <button onClick={logout}>Logout</button>
       </div>
+      <div><a href="/google">Sign In with Google</a></div>
     </div>
   );
 }
