@@ -24,7 +24,7 @@ module.exports = function (passport) {
     passport.use(new GoogleStrategy({
         clientID: "596773874661-pqh0d3k0rqtt64h4j0lqglo05t2660an.apps.googleusercontent.com",
         clientSecret: "uYnvreyclBsDIZ-brHTaUBkn",
-        callbackURL: "/google/callback"
+        callbackURL: "https://full-stack-appp.herokuapp.com/google/callback"
     },
         function (accessToken, refreshToken, profile, done) {
             process.nextTick(function () {
